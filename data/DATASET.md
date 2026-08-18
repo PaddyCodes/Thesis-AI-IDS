@@ -116,6 +116,32 @@ remain represented in each partition.
 
 
 
+\## Partition Integrity
+
+
+
+Random seed: 42
+
+
+
+train.csv  
+
+SHA256: 87673554EA49AE6B8239C743FCBB13EC4340D0F57CA4F0EEEC8FF908FDEC0C94
+
+
+
+validation.csv  
+
+SHA256: BD5B40F9787ECF8B912BA307E2739EFE779F0A67F71A89F575B6142A397B8CEC
+
+
+
+test.csv  
+
+SHA256: EB9118DA9D87345B0F13DA32B0581BE303463B99A7B6D7350C957623B612AD98
+
+
+
 The test partition is treated as held-out data and will not be used
 
 during model training, hyperparameter selection or baseline development.
