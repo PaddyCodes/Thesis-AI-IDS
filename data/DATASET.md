@@ -46,3 +46,77 @@ Download date: 7 August 2026
 
 Source: University of New Brunswick Canadian Institute for Cybersecurity
 
+
+
+\## Experimental Data Split
+
+
+
+The final cleaned dataset contains 2,520,798 records and was
+
+split using a fixed random seed of 42.
+
+
+
+The binary target was used for stratification to preserve the
+
+overall benign/attack class distribution.
+
+
+
+Final partitions:
+
+
+
+\- Training: 1,764,558 records (70%)
+
+\- Validation: 378,120 records (15%)
+
+\- Test: 378,120 records (15%)
+
+
+
+Class distribution:
+
+
+
+\### Training
+
+
+
+\- BENIGN: 1,466,539 (83.1108%)
+
+\- ATTACK: 298,019 (16.8892%)
+
+
+
+\### Validation
+
+
+
+\- BENIGN: 314,259 (83.1109%)
+
+\- ATTACK: 63,861 (16.8891%)
+
+
+
+\### Test
+
+
+
+\- BENIGN: 314,259 (83.1109%)
+
+\- ATTACK: 63,861 (16.8891%)
+
+
+
+Automated validation confirmed that all original attack categories
+
+remain represented in each partition.
+
+
+
+The test partition is treated as held-out data and will not be used
+
+during model training, hyperparameter selection or baseline development.
+
