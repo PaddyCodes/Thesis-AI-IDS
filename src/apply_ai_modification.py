@@ -438,10 +438,10 @@ def choose_scales(
             ]
         )
 
-        # The plan remains fixed. Only the
-        # effective per-row scale is reduced
-        # if an expansion would break the
-        # configured duration ceiling.
+        # Keep the family plan fixed.
+        # Only reduce an individual scale if
+        # expansion would exceed the duration
+        # ceiling.
         applied = np.minimum(
             sampled,
             feasible_max,
@@ -543,6 +543,23 @@ def transform_frame(
         "inverse_rate_features"
     ]
 
+    modified_features = (
+        timing_features
+        + rate_features
+    )
+
+    # Scaling can produce fractional values
+    # even where the original CIC feature was
+    # stored as an integer.
+    #
+    # Only features that are allowed to change
+    # are promoted to float64.
+    for feature in modified_features:
+        transformed[feature] = (
+            transformed[feature]
+            .astype("float64")
+        )
+
     for feature in timing_features:
         transformed.loc[
             attack_mask,
@@ -617,23 +634,47 @@ def validate_transformation(
         ] == 0
     )
 
-    if not original.loc[
-        benign_mask
-    ].equals(
-        transformed.loc[
-            benign_mask
-        ]
-    ):
-        raise ValueError(
-            "Benign records changed."
-        )
-
     modified_features = set(
         config["timing_features"]
         + config[
             "inverse_rate_features"
         ]
     )
+
+    # Modifiable numeric columns may have
+    # been promoted from integer to float.
+    # Benign values still have to remain
+    # numerically identical.
+    for feature in modified_features:
+        original_values = (
+            original.loc[
+                benign_mask,
+                feature,
+            ]
+            .to_numpy(
+                dtype="float64"
+            )
+        )
+
+        transformed_values = (
+            transformed.loc[
+                benign_mask,
+                feature,
+            ]
+            .to_numpy(
+                dtype="float64"
+            )
+        )
+
+        if not np.array_equal(
+            original_values,
+            transformed_values,
+            equal_nan=True,
+        ):
+            raise ValueError(
+                "Benign records changed "
+                f"for feature: {feature}"
+            )
 
     unchanged_features = [
         column
@@ -755,16 +796,23 @@ def build_summary(
 
         rows.append(
             {
-                "label": label,
+                "label":
+                    label,
                 "records":
-                    int(len(group)),
+                    int(
+                        len(group)
+                    ),
                 "requested_min_scale":
                     float(
-                        rule["min_scale"]
+                        rule[
+                            "min_scale"
+                        ]
                     ),
                 "requested_max_scale":
                     float(
-                        rule["max_scale"]
+                        rule[
+                            "max_scale"
+                        ]
                     ),
                 "sampled_scale_mean":
                     float(
@@ -917,7 +965,9 @@ def save_results(
             "sha256":
                 scale_log_hash,
             "records":
-                int(len(audit)),
+                int(
+                    len(audit)
+                ),
             "constrained_records":
                 int(
                     audit[

@@ -1,5 +1,3 @@
-import copy
-
 import numpy as np
 import pandas as pd
 import pytest
@@ -222,12 +220,16 @@ def test_timing_features_use_same_scale(
     plan,
     sample_frame,
 ):
-    transformed, _, scales, _, _ = (
-        transform_frame(
-            sample_frame,
-            config,
-            plan,
-        )
+    (
+        transformed,
+        _,
+        scales,
+        _,
+        _,
+    ) = transform_frame(
+        sample_frame,
+        config,
+        plan,
     )
 
     attack_a = 1
@@ -359,13 +361,15 @@ def test_transformation_is_deterministic(
                 "label": "Attack A",
                 "min_scale": 0.5,
                 "max_scale": 0.8,
-                "rationale": "Test.",
+                "rationale":
+                    "Synthetic test interval.",
             },
             {
                 "label": "Attack B",
                 "min_scale": 1.2,
                 "max_scale": 1.8,
-                "rationale": "Test.",
+                "rationale":
+                    "Synthetic test interval.",
             },
         ],
     }
@@ -390,4 +394,95 @@ def test_transformation_is_deterministic(
     np.testing.assert_allclose(
         first[2].to_numpy(),
         second[2].to_numpy(),
+    )
+
+
+def test_integer_modifiable_columns_supported(
+    config,
+    plan,
+    sample_frame,
+):
+    # This reproduces the real CIC schema
+    # where some modifiable fields are stored
+    # as integers.
+    frame = sample_frame.copy()
+
+    frame["Flow Duration"] = (
+        frame[
+            "Flow Duration"
+        ].astype("int64")
+    )
+
+    frame["Flow Bytes/s"] = (
+        frame[
+            "Flow Bytes/s"
+        ].astype("int64")
+    )
+
+    transformed, *_ = (
+        transform_frame(
+            frame,
+            config,
+            plan,
+        )
+    )
+
+    assert (
+        transformed[
+            "Flow Duration"
+        ].dtype
+        == np.dtype(
+            "float64"
+        )
+    )
+
+    assert (
+        transformed[
+            "Flow Bytes/s"
+        ].dtype
+        == np.dtype(
+            "float64"
+        )
+    )
+
+    # Benign values remain numerically
+    # unchanged despite the dtype promotion.
+    assert transformed.loc[
+        0,
+        "Flow Duration",
+    ] == pytest.approx(
+        100.0
+    )
+
+    assert transformed.loc[
+        0,
+        "Flow Bytes/s",
+    ] == pytest.approx(
+        1000.0
+    )
+
+    # Attack A has a fixed scale of 0.5.
+    assert transformed.loc[
+        1,
+        "Flow Duration",
+    ] == pytest.approx(
+        100.0
+    )
+
+    assert transformed.loc[
+        1,
+        "Flow Bytes/s",
+    ] == pytest.approx(
+        1000.0
+    )
+
+    # Non-modifiable fields should retain
+    # their original values and dtype.
+    pd.testing.assert_series_equal(
+        transformed[
+            "Destination Port"
+        ],
+        frame[
+            "Destination Port"
+        ],
     )
