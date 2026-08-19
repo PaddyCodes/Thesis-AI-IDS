@@ -486,3 +486,55 @@ def test_integer_modifiable_columns_supported(
             "Destination Port"
         ],
     )
+
+def test_duration_ceiling_handles_float_boundary(
+    config,
+    plan,
+    sample_frame,
+):
+    boundary_config = {
+        **config,
+        "generation": {
+            **config["generation"],
+            "maximum_flow_duration":
+                120000000,
+        },
+    }
+
+    frame = sample_frame.copy()
+
+    # This reproduces the kind of duration
+    # that caused the real CIC transformation
+    # to exceed the ceiling by one float step.
+    frame.loc[
+        2,
+        "Flow Duration",
+    ] = 92026804.0
+
+    (
+        transformed,
+        _,
+        applied,
+        constrained,
+        _,
+    ) = transform_frame(
+        frame,
+        boundary_config,
+        plan,
+    )
+
+    assert constrained.iloc[2]
+
+    assert transformed.loc[
+        2,
+        "Flow Duration",
+    ] <= 120000000
+
+    mathematical_limit = (
+        120000000
+        / 92026804.0
+    )
+
+    assert applied.iloc[
+        2
+    ] < mathematical_limit

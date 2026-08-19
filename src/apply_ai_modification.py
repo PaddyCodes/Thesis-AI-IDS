@@ -429,13 +429,23 @@ def choose_scales(
             durations > 0
         )
 
-        feasible_max[
-            positive_duration
-        ] = (
+        raw_feasible_max = (
             maximum_duration
             / durations[
                 positive_duration
             ]
+        )
+
+        # Move the calculated boundary one
+        # representable float towards zero.
+        # This prevents a constrained duration
+        # exceeding the ceiling purely through
+        # floating-point rounding.
+        feasible_max[
+            positive_duration
+        ] = np.nextafter(
+            raw_feasible_max,
+            0.0,
         )
 
         # Keep the family plan fixed.
