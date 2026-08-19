@@ -1,0 +1,90 @@
+{
+"plan_version": 1,
+"strategy": "detector_independent_timing_morphing",
+"families": [
+{
+"label": "Bot",
+"min_scale": 0.7,
+"max_scale": 0.95,
+"rationale": "Its median is above the benign median while its interquartile range substantially overlaps the benign timing range, supporting moderate downward scaling."
+},
+{
+"label": "DDoS",
+"min_scale": 0.5,
+"max_scale": 0.7,
+"rationale": "Its median and upper quartile are substantially above the corresponding benign timing values, supporting strong downward scaling."
+},
+{
+"label": "DoS GoldenEye",
+"min_scale": 0.5,
+"max_scale": 0.6,
+"rationale": "Its central timing distribution is far above the benign median and upper quartile, supporting scaling near the permitted minimum."
+},
+{
+"label": "DoS Hulk",
+"min_scale": 0.5,
+"max_scale": 0.55,
+"rationale": "Its quartiles and median are much higher than the benign central distribution, supporting the strongest permitted downward scaling."
+},
+{
+"label": "DoS Slowhttptest",
+"min_scale": 0.5,
+"max_scale": 0.6,
+"rationale": "Its central timing values are concentrated well above the benign median and upper quartile, supporting strong downward scaling."
+},
+{
+"label": "DoS slowloris",
+"min_scale": 0.5,
+"max_scale": 0.7,
+"rationale": "Its broad distribution has a very high median and upper quartile relative to benign timings, supporting strong but slightly wider downward scaling."
+},
+{
+"label": "FTP-Patator",
+"min_scale": 0.5,
+"max_scale": 0.8,
+"rationale": "Its lower quartile is near the benign lower quartile but its median and upper quartile are much higher, supporting a wider downward interval."
+},
+{
+"label": "Heartbleed",
+"min_scale": 0.5,
+"max_scale": 0.7,
+"rationale": "Its observed timings are consistently high relative to the benign central distribution, supporting strong downward scaling."
+},
+{
+"label": "Infiltration",
+"min_scale": 0.5,
+"max_scale": 0.6,
+"rationale": "Its observed timing range is concentrated near the high end of the benign distribution, supporting scaling near the permitted minimum."
+},
+{
+"label": "PortScan",
+"min_scale": 1.8,
+"max_scale": 2.0,
+"rationale": "Its central timing distribution is substantially below even the benign lower quartile, supporting the strongest permitted upward scaling."
+},
+{
+"label": "SSH-Patator",
+"min_scale": 0.5,
+"max_scale": 0.6,
+"rationale": "Its central timing values are far above the benign median and upper quartile, supporting scaling near the permitted minimum."
+},
+{
+"label": "Web Attack - Brute Force",
+"min_scale": 0.5,
+"max_scale": 0.7,
+"rationale": "Its interquartile timing range is well above the benign central distribution, supporting strong downward scaling."
+},
+{
+"label": "Web Attack - SQL Injection",
+"min_scale": 0.5,
+"max_scale": 0.7,
+"rationale": "Its tightly clustered timing values are well above the benign median and upper quartile, supporting strong downward scaling."
+},
+{
+"label": "Web Attack - XSS",
+"min_scale": 0.5,
+"max_scale": 0.7,
+"rationale": "Its central timing values are well above the benign median and upper quartile, supporting strong downward scaling."
+}
+]
+}
