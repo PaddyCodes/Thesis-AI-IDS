@@ -1,0 +1,29 @@
+model,attack,samples,detected,missed,recall
+baseline,Bot,299,236,63,0.7892976588628763
+baseline,DDoS,19185,19180,5,0.9997393797237425
+baseline,DoS GoldenEye,1530,1530,0,1.0
+baseline,DoS Hulk,26010,25941,69,0.9973471741637832
+baseline,DoS Slowhttptest,778,776,2,0.9974293059125964
+baseline,DoS slowloris,819,817,2,0.9975579975579976
+baseline,FTP-Patator,871,871,0,1.0
+baseline,Heartbleed,1,1,0,1.0
+baseline,Infiltration,5,5,0,1.0
+baseline,PortScan,13546,13407,139,0.9897386682415473
+baseline,SSH-Patator,480,479,1,0.9979166666666667
+baseline,Web Attack - Brute Force,228,227,1,0.9956140350877193
+baseline,Web Attack - SQL Injection,4,2,2,0.5
+baseline,Web Attack - XSS,105,100,5,0.9523809523809523
+tuned,Bot,299,279,20,0.9331103678929766
+tuned,DDoS,19185,19183,2,0.999895751889497
+tuned,DoS GoldenEye,1530,1530,0,1.0
+tuned,DoS Hulk,26010,26010,0,1.0
+tuned,DoS Slowhttptest,778,777,1,0.9987146529562982
+tuned,DoS slowloris,819,817,2,0.9975579975579976
+tuned,FTP-Patator,871,871,0,1.0
+tuned,Heartbleed,1,1,0,1.0
+tuned,Infiltration,5,5,0,1.0
+tuned,PortScan,13546,13546,0,1.0
+tuned,SSH-Patator,480,479,1,0.9979166666666667
+tuned,Web Attack - Brute Force,228,227,1,0.9956140350877193
+tuned,Web Attack - SQL Injection,4,2,2,0.5
+tuned,Web Attack - XSS,105,103,2,0.9809523809523809

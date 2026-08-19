@@ -7,4 +7,6 @@ data/processed/
 
 .pytest_cache/
 
-outputs/models/
+outputs/models/*
+!outputs/models/MODEL.md
+!outputs/models/random_forest_features.txt
