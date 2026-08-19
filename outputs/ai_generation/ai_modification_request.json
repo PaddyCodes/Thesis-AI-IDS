@@ -1,0 +1,240 @@
+{
+    "request_version": 1,
+    "purpose": "Defensive evaluation of AI-assisted timing modification of existing malicious flow feature vectors.",
+    "strategy": "detector_independent_timing_morphing",
+    "source_test_sha256": "EB9118DA9D87345B0F13DA32B0581BE303463B99A7B6D7350C957623B612AD98",
+    "detector_information_provided": false,
+    "allowed_scale": {
+        "minimum": 0.5,
+        "maximum": 2.0
+    },
+    "transformation": {
+        "description": "A positive timing scale will later be applied to all timing features for a record. Rate features will be scaled inversely.",
+        "immutable_features": [
+            "Label",
+            "binary_target",
+            "Destination Port"
+        ],
+        "timing_features": [
+            "Flow Duration",
+            "Flow IAT Mean",
+            "Flow IAT Std",
+            "Flow IAT Max",
+            "Flow IAT Min",
+            "Fwd IAT Total",
+            "Fwd IAT Mean",
+            "Fwd IAT Std",
+            "Fwd IAT Max",
+            "Fwd IAT Min",
+            "Bwd IAT Total",
+            "Bwd IAT Mean",
+            "Bwd IAT Std",
+            "Bwd IAT Max",
+            "Bwd IAT Min",
+            "Active Mean",
+            "Active Std",
+            "Active Max",
+            "Active Min",
+            "Idle Mean",
+            "Idle Std",
+            "Idle Max",
+            "Idle Min"
+        ],
+        "inverse_rate_features": [
+            "Flow Bytes/s",
+            "Flow Packets/s",
+            "Fwd Packets/s",
+            "Bwd Packets/s"
+        ]
+    },
+    "constraints": [
+        "Use only the supplied timing distributions.",
+        "Do not assume access to either intrusion detector.",
+        "Do not use detector rules, feature importance, predictions or performance.",
+        "Do not alter attack labels or attack-family identity.",
+        "Do not propose exploitation steps or new attacks.",
+        "Choose one scale interval for every attack family.",
+        "Every scale must remain inside the allowed range.",
+        "Do not return an interval of exactly 1.0 to 1.0."
+    ],
+    "benign_reference": {
+        "scope": "benign",
+        "group": "BENIGN",
+        "count": 314259,
+        "minimum": -4.0,
+        "q05": 5.0,
+        "q25": 203.0,
+        "median": 38749.0,
+        "q75": 1084105.5,
+        "q95": 115261656.89999999,
+        "maximum": 119999944.0
+    },
+    "attack_families": [
+        {
+            "group": "Bot",
+            "count": 284,
+            "minimum": 2.0,
+            "q05": 18.0,
+            "q25": 49.0,
+            "median": 71438.5,
+            "q75": 995148.25,
+            "q95": 1025041.2,
+            "maximum": 1093860.0
+        },
+        {
+            "group": "DDoS",
+            "count": 19206,
+            "minimum": 3.0,
+            "q05": 35994.75,
+            "q25": 617736.5,
+            "median": 1875125.0,
+            "q75": 9220928.0,
+            "q95": 90928871.25,
+            "maximum": 102676884.0
+        },
+        {
+            "group": "DoS GoldenEye",
+            "count": 1463,
+            "minimum": 1025.0,
+            "q05": 5005774.0,
+            "q25": 10528229.5,
+            "median": 11531520.0,
+            "q75": 18504033.0,
+            "q95": 100470993.89999998,
+            "maximum": 119283792.0
+        },
+        {
+            "group": "DoS Hulk",
+            "count": 25959,
+            "minimum": 1.0,
+            "q05": 3543.8,
+            "q25": 83689212.0,
+            "median": 86632133.0,
+            "q75": 99101275.0,
+            "q95": 100862898.1,
+            "maximum": 119425578.0
+        },
+        {
+            "group": "DoS Slowhttptest",
+            "count": 765,
+            "minimum": 2.0,
+            "q05": 55972.80000000001,
+            "q25": 63082532.0,
+            "median": 63120629.0,
+            "q75": 63159992.0,
+            "q95": 109889431.4,
+            "maximum": 119799403.0
+        },
+        {
+            "group": "DoS slowloris",
+            "count": 849,
+            "minimum": 2.0,
+            "q05": 514196.8,
+            "q25": 3003024.0,
+            "median": 99999824.0,
+            "q75": 103609791.0,
+            "q95": 109009197.2,
+            "maximum": 119016275.0
+        },
+        {
+            "group": "FTP-Patator",
+            "count": 835,
+            "minimum": 1.0,
+            "q05": 215.0,
+            "q25": 258.0,
+            "median": 8699907.0,
+            "q75": 9204806.5,
+            "q95": 9844893.9,
+            "maximum": 10503314.0
+        },
+        {
+            "group": "Heartbleed",
+            "count": 2,
+            "minimum": 24719667.0,
+            "q05": 29446739.55,
+            "q25": 48355029.75,
+            "median": 71990392.5,
+            "q75": 95625755.25,
+            "q95": 114534045.44999999,
+            "maximum": 119261118.0
+        },
+        {
+            "group": "Infiltration",
+            "count": 2,
+            "minimum": 66695827.0,
+            "q05": 69360627.35,
+            "q25": 80019828.75,
+            "median": 93343830.5,
+            "q75": 106667832.25,
+            "q95": 117327033.64999999,
+            "maximum": 119991834.0
+        },
+        {
+            "group": "PortScan",
+            "count": 13675,
+            "minimum": 1.0,
+            "q05": 11.0,
+            "q25": 33.0,
+            "median": 50.0,
+            "q75": 68.0,
+            "q95": 97.0,
+            "maximum": 112492824.0
+        },
+        {
+            "group": "SSH-Patator",
+            "count": 488,
+            "minimum": 1.0,
+            "q05": 112.10000000000001,
+            "q25": 11464931.5,
+            "median": 12037262.5,
+            "q75": 12702375.75,
+            "q95": 13685225.25,
+            "maximum": 19524513.0
+        },
+        {
+            "group": "Web Attack - Brute Force",
+            "count": 232,
+            "minimum": 31.0,
+            "q05": 96.85000000000001,
+            "q25": 5214931.75,
+            "median": 5553177.0,
+            "q75": 5845875.5,
+            "q95": 9808000.15,
+            "maximum": 35446860.0
+        },
+        {
+            "group": "Web Attack - SQL Injection",
+            "count": 4,
+            "minimum": 5005388.0,
+            "q05": 5005935.95,
+            "q25": 5008127.75,
+            "median": 5009102.0,
+            "q75": 5009992.0,
+            "q95": 5011981.6,
+            "maximum": 5012479.0
+        },
+        {
+            "group": "Web Attack - XSS",
+            "count": 97,
+            "minimum": 259.0,
+            "q05": 5027387.2,
+            "q25": 5180017.0,
+            "median": 5381794.0,
+            "q75": 5575379.0,
+            "q95": 5980953.6,
+            "maximum": 68150616.0
+        }
+    ],
+    "required_output": {
+        "plan_version": 1,
+        "strategy": "detector_independent_timing_morphing",
+        "families": [
+            {
+                "label": "<exact attack label>",
+                "min_scale": "<number>",
+                "max_scale": "<number>",
+                "rationale": "<concise timing-only reason>"
+            }
+        ]
+    }
+}

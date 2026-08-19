@@ -1,0 +1,28 @@
+Use only the information contained in the attached ai_modification_request.json.
+
+This is a defensive cybersecurity research experiment evaluating whether two frozen intrusion detection approaches remain effective when malicious flow records undergo AI-assisted timing modification.
+
+For every attack family in the request, choose one bounded timing scale interval.
+
+You must follow all constraints in the request.
+
+Important restrictions:
+
+- Do not request or assume access to either intrusion detector.
+- Do not make assumptions about IDS rules, thresholds, machine-learning feature importance, model predictions, or detector performance.
+- Base each decision only on the benign and attack-family timing statistics supplied in the request.
+- Do not change attack labels, destination ports, packet counts, byte counts, flags, or payload characteristics.
+- Do not propose new attacks or exploitation steps.
+- The purpose is only to alter timing characteristics of existing labelled malicious feature vectors.
+- Every min_scale and max_scale must remain within the allowed bounds.
+- min_scale must be less than or equal to max_scale.
+- Do not use 1.0 to 1.0 as the interval for any family.
+- Keep each rationale concise and based only on the supplied timing distribution.
+
+Return ONLY valid JSON.
+
+Do not use Markdown.
+Do not use a code fence.
+Do not include introductory or concluding text.
+
+Use exactly the output structure requested in ai_modification_request.json.
