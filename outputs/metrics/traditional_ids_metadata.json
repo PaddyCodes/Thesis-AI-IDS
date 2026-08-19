@@ -1,0 +1,20 @@
+{
+    "detector": "deterministic_flow_rule_ids",
+    "rule_version": 1,
+    "rule_count": 8,
+    "rule_file": "configs\\traditional_rules.json",
+    "rule_file_sha256": "0e60e2230edea21579b849d12f72e9b60453428255a282de7f592e0ca7667011",
+    "validation_records": 378120,
+    "validation_metrics": {
+        "accuracy": 0.8728419549349413,
+        "precision": 0.6175891978896539,
+        "recall": 0.6488936909851083,
+        "f1": 0.6328545575332738,
+        "fpr": 0.08164921291037011,
+        "fnr": 0.3511063090148917,
+        "tn": 288600,
+        "fp": 25659,
+        "fn": 22422,
+        "tp": 41439
+    }
+}
