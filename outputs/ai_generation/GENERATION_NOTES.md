@@ -63,14 +63,15 @@ SHA-256:
 
 EB9118DA9D87345B0F13DA32B0581BE303463B99A7B6D7350C957623B612AD98
 
-The source held-out test set contained:
+The original held-out test set contained:
 
 - 378,120 total records;
 - 314,259 benign records;
-- 63,861 malicious records.
+- 63,861 malicious records;
+- 14 malicious attack families.
 
-The original held-out test condition had already been evaluated before the
-AI-generation stage began.
+The original held-out test condition had already been evaluated using both
+frozen intrusion detection approaches before the AI-generation stage began.
 
 ---
 
@@ -139,10 +140,12 @@ It was not provided with:
 
 - Random Forest feature importance;
 - Random Forest predictions;
-- Random Forest validation or held-out test results;
+- Random Forest validation results;
+- Random Forest held-out test results;
 - traditional IDS rules;
 - traditional IDS thresholds;
-- traditional IDS validation or held-out test results;
+- traditional IDS validation results;
+- traditional IDS held-out test results;
 - information identifying attack families that either detector found easy or
   difficult to detect.
 
@@ -215,8 +218,8 @@ The plan was not manually adjusted after generation.
 
 ## Interpretation of the AI-assisted condition
 
-The generated condition is intended to be interpreted as an AI-assisted,
-feature-space timing-morphing robustness experiment.
+The generated condition is interpreted as an AI-assisted, feature-space
+timing-morphing robustness experiment.
 
 The AI selected bounded timing-scale intervals by comparing supplied attack
 timing distributions with a benign timing reference.
@@ -232,73 +235,318 @@ The experiment operates only on previously labelled CIC-IDS2017 flow feature
 vectors and is intended to evaluate detector robustness to AI-assisted
 modification of observable timing characteristics.
 
-Attack-family identity and ground-truth labels will remain unchanged.
+Attack-family identity and ground-truth labels remain unchanged.
 
 ---
 
-## Planned transformation controls
+## Transformation controls
 
-At the point this generation record was created, the AI-generated plan had
-not yet been applied to the held-out dataset.
+The AI-generated plan was applied to the original held-out test partition
+using the deterministic Python transformation implementation.
 
-The actual modification of records will be performed deterministically in
-Python only after the generated plan has been validated, hashed, and committed.
-
-The planned implementation will use:
+The transformation used:
 
 Random seed: 42
 
 The AI model selected only the family-specific timing-scale intervals.
 
-The Python transformation, rather than the AI model, will be responsible for:
+For each malicious record, Python selected an individual scale from the
+interval assigned to that attack family.
+
+The same effective scale was then applied consistently to all eligible timing
+features for that record.
+
+The configured timing features were:
+
+- Flow Duration;
+- Flow IAT Mean;
+- Flow IAT Std;
+- Flow IAT Max;
+- Flow IAT Min;
+- Fwd IAT Total;
+- Fwd IAT Mean;
+- Fwd IAT Std;
+- Fwd IAT Max;
+- Fwd IAT Min;
+- Bwd IAT Total;
+- Bwd IAT Mean;
+- Bwd IAT Std;
+- Bwd IAT Max;
+- Bwd IAT Min;
+- Active Mean;
+- Active Std;
+- Active Max;
+- Active Min;
+- Idle Mean;
+- Idle Std;
+- Idle Max;
+- Idle Min.
+
+The following rate features were adjusted inversely using the same effective
+per-record scale:
+
+- Flow Bytes/s;
+- Flow Packets/s;
+- Fwd Packets/s;
+- Bwd Packets/s.
+
+The Python transformation was responsible for:
 
 - selecting the individual timing scale for each malicious record;
-- applying the scale consistently to eligible timing features;
+- applying the same effective scale consistently across timing features;
 - inversely adjusting dependent rate features;
-- enforcing predefined transformation bounds;
-- preserving immutable features;
+- enforcing the predefined maximum Flow Duration;
+- preserving all non-modifiable features;
 - preserving attack-family labels;
 - preserving the binary attack target;
+- checking for NaN or infinite values;
 - validating the resulting modified dataset.
 
-Benign records will not be modified.
+Benign records were preserved unchanged.
 
-Neither IDS will be retrained or altered as a consequence of the AI-generated
+Neither IDS was retrained or altered as a consequence of the AI-generated
 condition.
+
+---
+
+## Transformation implementation notes
+
+The transformation implementation was tested using automated unit and
+regression tests before successful dataset generation.
+
+A first local execution exposed a data-type compatibility issue because some
+CIC-IDS2017 timing features were stored as integer values while multiplication
+by non-integer scale factors produced floating-point values.
+
+The transformation stopped before any output dataset was written.
+
+The implementation was updated so that only modifiable timing and rate
+features are explicitly promoted to float64 before transformation.
+
+A regression test was added to reproduce the integer-source-column case.
+
+A subsequent execution reached the transformation integrity checks but
+identified two PortScan records whose calculated Flow Duration exceeded the
+120,000,000 ceiling by approximately 1.49e-08 because of floating-point
+representation.
+
+No output dataset was written by this failed execution.
+
+The boundary calculation was subsequently changed using `numpy.nextafter` so
+that constrained scale values are moved one representable floating-point value
+towards zero.
+
+This ensures that multiplication of the effective scale by the original Flow
+Duration cannot exceed the configured ceiling solely because of floating-point
+rounding.
+
+A regression test was added for this boundary condition.
+
+Following these fixes, the complete automated test suite contained 79 tests
+and all 79 passed before the successful transformation was executed.
+
+---
+
+## Duration constraint handling
+
+The configured maximum Flow Duration was:
+
+120,000,000
+
+The majority of generated timing scales could be applied directly.
+
+Thirteen PortScan records required their sampled scale to be reduced because
+the requested expansion would otherwise have exceeded the configured maximum
+Flow Duration.
+
+For these records:
+
+- the original AI-generated family interval was not altered;
+- the originally sampled scale was retained in the transformation audit;
+- only the effective per-record applied scale was reduced;
+- the same effective scale was used across all timing and inverse-rate
+  transformations for that record.
+
+The transformation audit records whether each malicious record was
+constrained and stores both its sampled and applied scale.
+
+No other attack family required duration-boundary constraint handling.
+
+---
+
+## Generated AI-assisted dataset
+
+The AI-assisted held-out condition was generated successfully.
+
+Modified dataset:
+
+data/processed/ai_modified_test.csv
+
+SHA-256:
+
+8BA5578F5DDCD0A11120C51C9632E21A5077452D9E3F208D77BF2876D4A268AD
+
+The generated condition contained:
+
+- 378,120 total records;
+- 314,259 benign records;
+- 63,861 malicious records;
+- all 14 malicious attack families from the original held-out condition.
+
+The generated dataset is retained locally under `data/processed/` and is not
+committed to version control.
+
+Its SHA-256 hash provides a reproducible identifier for the exact generated
+experimental condition.
+
+---
+
+## Transformation audit
+
+The per-record scale audit was preserved as:
+
+outputs/ai_generation/ai_transformation_scales.csv
+
+SHA-256:
+
+2B9EE487BC81B1EC61CA41DFDCD40484A9531617D9C4872582A1CDF4500D7047
+
+The audit contains one record for every malicious held-out test record and
+records:
+
+- original source row;
+- attack-family label;
+- sampled scale;
+- applied scale;
+- whether the scale was constrained.
+
+The audit therefore contains:
+
+63,861 records.
+
+Thirteen records were marked as constrained.
+
+---
+
+## Transformation summary
+
+A family-level transformation summary was preserved as:
+
+outputs/ai_generation/ai_transformation_summary.csv
+
+The successful transformation produced the following results:
+
+| Attack family | Records | Requested interval | Mean applied scale | Constrained |
+|---|---:|---:|---:|---:|
+| Bot | 284 | 0.70-0.95 | 0.820688 | 0 |
+| DDoS | 19,206 | 0.50-0.70 | 0.600038 | 0 |
+| DoS GoldenEye | 1,463 | 0.50-0.60 | 0.551141 | 0 |
+| DoS Hulk | 25,959 | 0.50-0.55 | 0.525072 | 0 |
+| DoS Slowhttptest | 765 | 0.50-0.60 | 0.548590 | 0 |
+| DoS slowloris | 849 | 0.50-0.70 | 0.599173 | 0 |
+| FTP-Patator | 835 | 0.50-0.80 | 0.647635 | 0 |
+| Heartbleed | 2 | 0.50-0.70 | 0.630364 | 0 |
+| Infiltration | 2 | 0.50-0.60 | 0.538959 | 0 |
+| PortScan | 13,675 | 1.80-2.00 | 1.899763 | 13 |
+| SSH-Patator | 488 | 0.50-0.60 | 0.550412 | 0 |
+| Web Attack - Brute Force | 232 | 0.50-0.70 | 0.591492 | 0 |
+| Web Attack - SQL Injection | 4 | 0.50-0.70 | 0.602501 | 0 |
+| Web Attack - XSS | 97 | 0.50-0.70 | 0.608358 | 0 |
+
+The slight difference between the requested and mean applied PortScan scale
+resulted from the 13 records affected by the maximum Flow Duration constraint.
+
+---
+
+## Transformation integrity
+
+The successful transformation completed all configured integrity checks.
+
+The transformation implementation verified that:
+
+- the source held-out dataset hash matched the frozen source hash;
+- the AI modification plan hash matched the frozen plan hash;
+- the dataset row count remained unchanged;
+- the benign/attack class distribution remained unchanged;
+- all 14 malicious attack families remained present;
+- benign records remained numerically unchanged;
+- attack-family labels remained unchanged;
+- binary attack targets remained unchanged;
+- all non-modifiable features remained unchanged;
+- timing transformations used a consistent effective scale per record;
+- rate features were transformed inversely using the same scale;
+- no transformed Flow Duration exceeded 120,000,000;
+- no zero or negative effective timing scales were introduced;
+- no NaN values were introduced;
+- no infinite values were introduced.
+
+The successful transformation completed before either intrusion detection
+approach was evaluated against the AI-assisted condition.
 
 ---
 
 ## Experimental separation
 
-The experimental sequence completed at the time this record was frozen was:
+The experimental sequence completed at the time this record was updated was:
 
 1. Dataset preprocessing was completed.
 2. Training, validation, and held-out test partitions were created.
-3. The Random Forest IDS was trained, tuned, validated, and frozen.
-4. The traditional rule-based IDS was developed, validated, and frozen.
-5. Both detector configurations were committed before final held-out testing.
-6. The final held-out evaluation procedure was frozen.
-7. Both frozen detectors were evaluated on the original held-out test set.
-8. The original held-out results were preserved.
-9. The AI modification request and generation protocol were created.
-10. The AI modification request and generation protocol were frozen before
+3. The Random Forest IDS was trained and tuned using training data.
+4. The Random Forest IDS was evaluated on validation data and frozen.
+5. The traditional rule-based IDS was developed using training-derived
+   characteristics.
+6. The traditional IDS rules were frozen before validation exposure.
+7. The traditional IDS was evaluated on validation data.
+8. Both detector configurations were frozen before final held-out testing.
+9. The final held-out evaluation procedure was frozen in version control.
+10. Both frozen detectors were evaluated on the original held-out test set.
+11. The original held-out test results were preserved.
+12. The AI modification request and generation protocol were created.
+13. The AI modification request and generation protocol were frozen before
     successful AI generation.
-11. Claude Sonnet 5 declined before generating any modification parameters.
-12. Claude Sonnet 4.6 declined before generating any modification parameters.
-13. OpenAI ChatGPT GPT-5.6 Sol generated the bounded timing-morphing plan.
-14. The raw OpenAI response was preserved without manual modification.
-15. The operative plan was validated against the predefined schema and
+14. Claude Sonnet 5 declined before generating modification parameters.
+15. Claude Sonnet 4.6 declined before generating modification parameters.
+16. OpenAI ChatGPT GPT-5.6 Sol generated the bounded timing-morphing plan.
+17. The raw OpenAI response was preserved without manual modification.
+18. The operative AI plan was validated against the predefined schema and
     transformation bounds.
-16. The raw response and operative plan were confirmed to be identical.
+19. The raw response and operative plan were confirmed to be identical.
+20. The AI-generated plan and its provenance were frozen in version control.
+21. The deterministic transformation implementation was created.
+22. The transformation implementation was tested before dataset generation.
+23. Integer-source-column handling was corrected and covered by a regression
+    test.
+24. Floating-point duration-boundary handling was corrected and covered by a
+    regression test.
+25. All 79 automated tests passed.
+26. The transformation implementation was frozen in version control before
+    successful dataset generation.
+27. The AI-generated plan was applied to the held-out malicious records using
+    random seed 42.
+28. Transformation integrity checks passed.
+29. The AI-assisted held-out dataset was generated successfully.
+30. The generated dataset and transformation audit were assigned reproducible
+    SHA-256 hashes.
+31. At the time these transformation records were frozen, neither IDS had yet
+    been evaluated against the AI-assisted condition.
 
-At the time this generation record was frozen:
+---
 
-- the AI-generated plan had not yet been applied to the held-out dataset;
-- no AI-modified dataset had yet been produced;
-- neither IDS had been evaluated on an AI-assisted condition;
-- no AI-generated or AI-modified data had been introduced into the training
-  or validation partitions.
+## Experimental state at this freeze point
 
-Construction and evaluation of the AI-assisted condition will occur only
-after the generated plan and its provenance records have been frozen in
-version control.
+At the time this transformation record was frozen:
+
+- the original held-out test experiment had already been completed;
+- the AI modification plan had been generated and frozen;
+- the AI-assisted held-out dataset had been generated successfully;
+- the AI-assisted dataset had not been used for training;
+- the AI-assisted dataset had not been used for validation;
+- neither IDS had been retrained;
+- neither IDS had been altered;
+- neither IDS had yet been evaluated against the AI-assisted condition.
+
+The next experimental stage is evaluation of both previously frozen intrusion
+detection approaches against the same AI-assisted held-out condition.
+
+That evaluation will occur only after the transformation dataset and
+associated provenance evidence have been verified and frozen.

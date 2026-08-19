@@ -1,0 +1,52 @@
+{
+    "experiment": "ai_assisted_timing_morphing",
+    "generated_utc": "2026-08-19T14:00:25.459641+00:00",
+    "random_seed": 42,
+    "source_test_sha256": "EB9118DA9D87345B0F13DA32B0581BE303463B99A7B6D7350C957623B612AD98",
+    "ai_plan_sha256": "A7A06D886B1D80F44DC18EAD8BF29E48B12AAAAD8D5442DFF64F9BC9D4D3FC20",
+    "output_dataset": {
+        "path": "data\\processed\\ai_modified_test.csv",
+        "sha256": "8BA5578F5DDCD0A11120C51C9632E21A5077452D9E3F208D77BF2876D4A268AD",
+        "rows": 378120,
+        "benign": 314259,
+        "attacks": 63861
+    },
+    "scale_audit": {
+        "path": "outputs\\ai_generation\\ai_transformation_scales.csv",
+        "sha256": "2B9EE487BC81B1EC61CA41DFDCD40484A9531617D9C4872582A1CDF4500D7047",
+        "records": 63861,
+        "constrained_records": 13
+    },
+    "timing_features": [
+        "Flow Duration",
+        "Flow IAT Mean",
+        "Flow IAT Std",
+        "Flow IAT Max",
+        "Flow IAT Min",
+        "Fwd IAT Total",
+        "Fwd IAT Mean",
+        "Fwd IAT Std",
+        "Fwd IAT Max",
+        "Fwd IAT Min",
+        "Bwd IAT Total",
+        "Bwd IAT Mean",
+        "Bwd IAT Std",
+        "Bwd IAT Max",
+        "Bwd IAT Min",
+        "Active Mean",
+        "Active Std",
+        "Active Max",
+        "Active Min",
+        "Idle Mean",
+        "Idle Std",
+        "Idle Max",
+        "Idle Min"
+    ],
+    "inverse_rate_features": [
+        "Flow Bytes/s",
+        "Flow Packets/s",
+        "Fwd Packets/s",
+        "Bwd Packets/s"
+    ],
+    "maximum_flow_duration": 120000000.0
+}
