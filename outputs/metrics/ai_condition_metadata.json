@@ -1,0 +1,70 @@
+{
+    "experiment": "ai_assisted_held_out_test",
+    "executed_utc": "2026-08-19T14:40:34.539612+00:00",
+    "dataset": {
+        "path": "data/processed/ai_modified_test.csv",
+        "sha256": "8BA5578F5DDCD0A11120C51C9632E21A5077452D9E3F208D77BF2876D4A268AD",
+        "records": 378120,
+        "benign": 314259,
+        "attacks": 63861
+    },
+    "ai_provenance": {
+        "plan_sha256": "A7A06D886B1D80F44DC18EAD8BF29E48B12AAAAD8D5442DFF64F9BC9D4D3FC20",
+        "scale_audit_sha256": "2B9EE487BC81B1EC61CA41DFDCD40484A9531617D9C4872582A1CDF4500D7047"
+    },
+    "random_forest": {
+        "model_sha256": "EC2DBF6482DBFB4821D521528673F5CC4357FE9E973D5783B0C673A5DE23374C",
+        "features_sha256": "E70C12C8D468B7B1EC76DF559EF823AF3B89B4CF018B0C9C1CF38DE0291BDAAF",
+        "feature_count": 69,
+        "metrics": {
+            "accuracy": 0.9981566698402623,
+            "precision": 0.9958239135895504,
+            "recall": 0.9932509669438311,
+            "f1": 0.9945357761628135,
+            "fpr": 0.0008464355833882243,
+            "fnr": 0.006749033056168867,
+            "tn": 313993,
+            "fp": 266,
+            "fn": 431,
+            "tp": 63430
+        }
+    },
+    "traditional_ids": {
+        "rules_sha256": "0E60E2230EDEA21579B849D12F72E9B60453428255A282DE7F592E0CA7667011",
+        "metrics": {
+            "accuracy": 0.8698852216227653,
+            "precision": 0.609686396552756,
+            "recall": 0.6380889744914736,
+            "f1": 0.623564427645623,
+            "fpr": 0.08301114685657372,
+            "fnr": 0.36191102550852633,
+            "tn": 288172,
+            "fp": 26087,
+            "fn": 23112,
+            "tp": 40749
+        },
+        "rule_matches": {
+            "PORTSCAN_SHORT_FLOW": 39469,
+            "FTP_BRUTE_FORCE": 561,
+            "SSH_BRUTE_FORCE": 442,
+            "BOT_8080": 313,
+            "HTTP_FLOOD": 25300,
+            "SLOW_HTTP_DOS": 764,
+            "HEARTBLEED_LARGE_FLOW": 0,
+            "INFILTRATION_444": 0
+        }
+    },
+    "agreement": {
+        "records": 378120,
+        "both_correct": 328569,
+        "random_forest_only_correct": 48854,
+        "traditional_only_correct": 352,
+        "both_wrong": 345,
+        "prediction_disagreements": 49206
+    },
+    "disagreement_records": 49206,
+    "original_result_hashes": {
+        "random_forest_metrics_sha256": "98A0E54585E8CDC69C7658DE2E0DA1D5512021B128ACC4415D601F1DC9A8B1C6",
+        "traditional_ids_metrics_sha256": "76C9F4A8C7A9EBE6F52BC73C8CD9834C06099A4C30872604B1500B13C8EA1733"
+    }
+}
