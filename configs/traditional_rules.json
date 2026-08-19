@@ -1,0 +1,303 @@
+{
+    "version": 1,
+    "rules": [
+        {
+            "name": "PORTSCAN_SHORT_FLOW",
+            "description": "Very short and small connection consistent with scan traffic",
+            "conditions": [
+                {
+                    "feature": "Flow Duration",
+                    "operator": "le",
+                    "value": 700
+                },
+                {
+                    "feature": "Total Fwd Packets",
+                    "operator": "le",
+                    "value": 2
+                },
+                {
+                    "feature": "Total Backward Packets",
+                    "operator": "le",
+                    "value": 1
+                },
+                {
+                    "feature": "Average Packet Size",
+                    "operator": "le",
+                    "value": 5
+                },
+                {
+                    "feature": "Packet Length Std",
+                    "operator": "le",
+                    "value": 3.5
+                }
+            ]
+        },
+        {
+            "name": "FTP_BRUTE_FORCE",
+            "description": "FTP authentication flow matching the FTP-Patator training signature",
+            "conditions": [
+                {
+                    "feature": "Destination Port",
+                    "operator": "eq",
+                    "value": 21
+                },
+                {
+                    "feature": "Total Fwd Packets",
+                    "operator": "eq",
+                    "value": 9
+                },
+                {
+                    "feature": "Total Backward Packets",
+                    "operator": "eq",
+                    "value": 15
+                },
+                {
+                    "feature": "Average Packet Size",
+                    "operator": "between",
+                    "min": 10,
+                    "max": 15
+                },
+                {
+                    "feature": "Packet Length Std",
+                    "operator": "le",
+                    "value": 15
+                },
+                {
+                    "feature": "Down/Up Ratio",
+                    "operator": "eq",
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "name": "SSH_BRUTE_FORCE",
+            "description": "SSH authentication flow matching the SSH-Patator training signature",
+            "conditions": [
+                {
+                    "feature": "Destination Port",
+                    "operator": "eq",
+                    "value": 22
+                },
+                {
+                    "feature": "Total Fwd Packets",
+                    "operator": "between",
+                    "min": 18,
+                    "max": 30
+                },
+                {
+                    "feature": "Total Backward Packets",
+                    "operator": "between",
+                    "min": 28,
+                    "max": 40
+                },
+                {
+                    "feature": "Average Packet Size",
+                    "operator": "between",
+                    "min": 70,
+                    "max": 120
+                },
+                {
+                    "feature": "Packet Length Std",
+                    "operator": "between",
+                    "min": 150,
+                    "max": 250
+                },
+                {
+                    "feature": "Down/Up Ratio",
+                    "operator": "eq",
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "name": "BOT_8080",
+            "description": "Short low-volume bot-style connection to port 8080",
+            "conditions": [
+                {
+                    "feature": "Destination Port",
+                    "operator": "eq",
+                    "value": 8080
+                },
+                {
+                    "feature": "Flow Duration",
+                    "operator": "le",
+                    "value": 1100000
+                },
+                {
+                    "feature": "Total Fwd Packets",
+                    "operator": "le",
+                    "value": 5
+                },
+                {
+                    "feature": "Total Backward Packets",
+                    "operator": "le",
+                    "value": 4
+                },
+                {
+                    "feature": "Average Packet Size",
+                    "operator": "le",
+                    "value": 50
+                },
+                {
+                    "feature": "Packet Length Std",
+                    "operator": "le",
+                    "value": 80
+                }
+            ]
+        },
+        {
+            "name": "HTTP_FLOOD",
+            "description": "Sustained HTTP flow with packet-size behaviour consistent with flood attacks",
+            "conditions": [
+                {
+                    "feature": "Destination Port",
+                    "operator": "eq",
+                    "value": 80
+                },
+                {
+                    "feature": "Flow Duration",
+                    "operator": "ge",
+                    "value": 1000000
+                },
+                {
+                    "feature": "Total Fwd Packets",
+                    "operator": "between",
+                    "min": 4,
+                    "max": 16
+                },
+                {
+                    "feature": "Total Backward Packets",
+                    "operator": "between",
+                    "min": 4,
+                    "max": 11
+                },
+                {
+                    "feature": "Average Packet Size",
+                    "operator": "ge",
+                    "value": 500
+                },
+                {
+                    "feature": "Packet Length Std",
+                    "operator": "ge",
+                    "value": 1000
+                }
+            ]
+        },
+        {
+            "name": "SLOW_HTTP_DOS",
+            "description": "Very long low-volume HTTP flow consistent with slow HTTP denial of service",
+            "conditions": [
+                {
+                    "feature": "Destination Port",
+                    "operator": "eq",
+                    "value": 80
+                },
+                {
+                    "feature": "Flow Duration",
+                    "operator": "ge",
+                    "value": 50000000
+                },
+                {
+                    "feature": "Total Fwd Packets",
+                    "operator": "between",
+                    "min": 3,
+                    "max": 20
+                },
+                {
+                    "feature": "Total Backward Packets",
+                    "operator": "le",
+                    "value": 5
+                },
+                {
+                    "feature": "Average Packet Size",
+                    "operator": "le",
+                    "value": 600
+                }
+            ]
+        },
+        {
+            "name": "HEARTBLEED_LARGE_FLOW",
+            "description": "Extremely long and large bidirectional flow on the Heartbleed service port",
+            "conditions": [
+                {
+                    "feature": "Destination Port",
+                    "operator": "eq",
+                    "value": 444
+                },
+                {
+                    "feature": "Flow Duration",
+                    "operator": "ge",
+                    "value": 100000000
+                },
+                {
+                    "feature": "Total Fwd Packets",
+                    "operator": "ge",
+                    "value": 2000
+                },
+                {
+                    "feature": "Total Backward Packets",
+                    "operator": "ge",
+                    "value": 1500
+                },
+                {
+                    "feature": "Average Packet Size",
+                    "operator": "ge",
+                    "value": 1500
+                },
+                {
+                    "feature": "Packet Length Std",
+                    "operator": "ge",
+                    "value": 2000
+                }
+            ]
+        },
+        {
+            "name": "INFILTRATION_444",
+            "description": "Long bidirectional port 444 flow consistent with the training infiltration behaviour",
+            "conditions": [
+                {
+                    "feature": "Destination Port",
+                    "operator": "eq",
+                    "value": 444
+                },
+                {
+                    "feature": "Flow Duration",
+                    "operator": "ge",
+                    "value": 50000000
+                },
+                {
+                    "feature": "Total Fwd Packets",
+                    "operator": "ge",
+                    "value": 20
+                },
+                {
+                    "feature": "Total Backward Packets",
+                    "operator": "ge",
+                    "value": 20
+                },
+                {
+                    "feature": "Average Packet Size",
+                    "operator": "between",
+                    "min": 100,
+                    "max": 1000
+                },
+                {
+                    "feature": "Packet Length Std",
+                    "operator": "between",
+                    "min": 200,
+                    "max": 700
+                },
+                {
+                    "feature": "SYN Flag Count",
+                    "operator": "eq",
+                    "value": 1
+                },
+                {
+                    "feature": "ACK Flag Count",
+                    "operator": "eq",
+                    "value": 1
+                }
+            ]
+        }
+    ]
+}
