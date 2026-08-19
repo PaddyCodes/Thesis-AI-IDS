@@ -1,0 +1,21 @@
+{
+    "experiment": "original_held_out_test",
+    "dataset": {
+        "path": "data/processed/splits/test.csv",
+        "sha256": "EB9118DA9D87345B0F13DA32B0581BE303463B99A7B6D7350C957623B612AD98",
+        "expected_rows": 378120,
+        "expected_benign": 314259,
+        "expected_attacks": 63861
+    },
+    "random_forest": {
+        "model_path": "outputs/models/random_forest.joblib",
+        "model_sha256": "EC2DBF6482DBFB4821D521528673F5CC4357FE9E973D5783B0C673A5DE23374C",
+        "features_path": "outputs/models/random_forest_features.txt",
+        "features_sha256": "E70C12C8D468B7B1EC76DF559EF823AF3B89B4CF018B0C9C1CF38DE0291BDAAF",
+        "expected_feature_count": 69
+    },
+    "traditional_ids": {
+        "rules_path": "configs/traditional_rules.json",
+        "rules_sha256": "0E60E2230EDEA21579B849D12F72E9B60453428255A282DE7F592E0CA7667011"
+    }
+}
