@@ -1,0 +1,31 @@
+{
+    "experiment": "ai_assisted_held_out_test",
+    "dataset": {
+        "path": "data/processed/ai_modified_test.csv",
+        "sha256": "8BA5578F5DDCD0A11120C51C9632E21A5077452D9E3F208D77BF2876D4A268AD",
+        "expected_rows": 378120,
+        "expected_benign": 314259,
+        "expected_attacks": 63861
+    },
+    "random_forest": {
+        "model_path": "outputs/models/random_forest.joblib",
+        "model_sha256": "EC2DBF6482DBFB4821D521528673F5CC4357FE9E973D5783B0C673A5DE23374C",
+        "features_path": "outputs/models/random_forest_features.txt",
+        "features_sha256": "E70C12C8D468B7B1EC76DF559EF823AF3B89B4CF018B0C9C1CF38DE0291BDAAF",
+        "expected_feature_count": 69
+    },
+    "traditional_ids": {
+        "rules_path": "configs/traditional_rules.json",
+        "rules_sha256": "0E60E2230EDEA21579B849D12F72E9B60453428255A282DE7F592E0CA7667011"
+    },
+    "ai_provenance": {
+        "plan_path": "configs/ai_modification_plan.json",
+        "plan_sha256": "A7A06D886B1D80F44DC18EAD8BF29E48B12AAAAD8D5442DFF64F9BC9D4D3FC20",
+        "scale_audit_path": "outputs/ai_generation/ai_transformation_scales.csv",
+        "scale_audit_sha256": "2B9EE487BC81B1EC61CA41DFDCD40484A9531617D9C4872582A1CDF4500D7047"
+    },
+    "original_results": {
+        "random_forest_metrics_path": "outputs/metrics/original_test_random_forest_metrics.csv",
+        "traditional_ids_metrics_path": "outputs/metrics/original_test_traditional_ids_metrics.csv"
+    }
+}
