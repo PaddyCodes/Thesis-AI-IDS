@@ -1,0 +1,61 @@
+{
+    "experiment": "original_held_out_test",
+    "executed_utc": "2026-08-19T10:03:45.674346+00:00",
+    "dataset": {
+        "path": "data/processed/splits/test.csv",
+        "sha256": "EB9118DA9D87345B0F13DA32B0581BE303463B99A7B6D7350C957623B612AD98",
+        "records": 378120,
+        "benign": 314259,
+        "attacks": 63861
+    },
+    "random_forest": {
+        "model_sha256": "EC2DBF6482DBFB4821D521528673F5CC4357FE9E973D5783B0C673A5DE23374C",
+        "features_sha256": "E70C12C8D468B7B1EC76DF559EF823AF3B89B4CF018B0C9C1CF38DE0291BDAAF",
+        "feature_count": 69,
+        "metrics": {
+            "accuracy": 0.9991272611869247,
+            "precision": 0.9958478372851725,
+            "recall": 0.9989978233976918,
+            "f1": 0.9974203433288515,
+            "fpr": 0.0008464355833882243,
+            "fnr": 0.001002176602308138,
+            "tn": 313993,
+            "fp": 266,
+            "fn": 64,
+            "tp": 63797
+        }
+    },
+    "traditional_ids": {
+        "rules_sha256": "0E60E2230EDEA21579B849D12F72E9B60453428255A282DE7F592E0CA7667011",
+        "metrics": {
+            "accuracy": 0.8713582989527134,
+            "precision": 0.6129123202706512,
+            "recall": 0.6468110427334367,
+            "f1": 0.6294055800204185,
+            "fpr": 0.08301114685657372,
+            "fnr": 0.3531889572665633,
+            "tn": 288172,
+            "fp": 26087,
+            "fn": 22555,
+            "tp": 41306
+        },
+        "rule_matches": {
+            "PORTSCAN_SHORT_FLOW": 39434,
+            "FTP_BRUTE_FORCE": 561,
+            "SSH_BRUTE_FORCE": 442,
+            "BOT_8080": 313,
+            "HTTP_FLOOD": 25464,
+            "SLOW_HTTP_DOS": 1191,
+            "HEARTBLEED_LARGE_FLOW": 1,
+            "INFILTRATION_444": 0
+        }
+    },
+    "agreement": {
+        "records": 378120,
+        "both_correct": 329428,
+        "random_forest_only_correct": 48362,
+        "traditional_only_correct": 50,
+        "both_wrong": 280,
+        "prediction_disagreements": 48412
+    }
+}
